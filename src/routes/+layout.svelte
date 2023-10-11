@@ -39,21 +39,19 @@
 	</ul>
 </nav>
 
-<section class="container">
-	{#if !$page.url.pathname.match(/register|signin|users/i) && !data.userSession}
-		<section class="md:tw-sticky md:tw-top-20">
-			<hgroup>
-				<h2>Sign up now</h2>
-				<p>Create an account to join the amazing Flame community and explore the world</p>
-			</hgroup>
+{#if !$page.url.pathname.match(/register|signin|users/i) && !data.userSession}
+	<section class="container md:tw-sticky md:tw-top-20">
+		<hgroup>
+			<h2>Sign up now</h2>
+			<p>Create an account to join the amazing Flame community and explore the world</p>
+		</hgroup>
 
-			<div class="grid">
-				<a href="/register" role="button">Sign up</a>
-				<a href="/signin" role="button" class="contrast outline">Log in</a>
-			</div>
-		</section>
-	{/if}
-</section>
+		<div class="grid">
+			<a href="/register" role="button">Sign up</a>
+			<a href="/signin" role="button" class="contrast outline">Log in</a>
+		</div>
+	</section>
+{/if}
 <!-- This p just to give a space -->
 <main class="container">
 	<p aria-hidden />

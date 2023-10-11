@@ -4,10 +4,16 @@ import type { Actions } from './$types'
 
 export const actions: Actions = {
 	async signout({ cookies, locals }) {
-		cookies.delete('user session')
+		
+		if (!locals.user)
+			return error({
+				message: "You aren't signed in"
+			})
 
+		cookies.delete('user session')
+		
 		await prisma.user.update({
-			where: { id: locals.user?.id },
+			where: { id: locals.user.id },
 			data: { signedIn: false }
 		})
 		locals.userSession = null
@@ -19,22 +25,37 @@ export const actions: Actions = {
 	},
 
 	async deletion({ cookies, locals }) {
+		
+		if (!locals.user)
+			return error({
+				message: "You aren't signed in"
+			})
+
 		cookies.delete('user session')
 
-		await prisma.user.delete({
-			where: { id: locals.user?.id }
+		const user = prisma.user.delete({
+			where: { id: locals.user.id },
 		})
+		const userMeta = prisma.meta.delete({
+			where: {id: String(locals.user.metaID)}
+			//* IDK why it showing metaID is number type where
+			//* I have declared that as String in the schema
+		})
+
+		await prisma.$transaction([user, userMeta])
 
 		locals.user = null
 		locals.userSession = null
 
 		return {
 			success: true,
-			message: 'Your account have been deleted succesfully'
+			message: 'Your account have been deleted'
 		}
 	},
 
 	async updateProfile({ locals, request }) {
+		console.log('hello');
+		
 		const formData = await request.formData()
 
 		const phone = formData.get('phone') as string
@@ -54,15 +75,20 @@ export const actions: Actions = {
 			gender: gender || locals.user.meta?.gender
 		}
 
+		console.log(meta);
+
 		const user = await prisma.user.update({
 			where: { id: locals.user.id },
 			data: {
 				meta: {
-					create: { ...meta }
+					update: { ...meta }
 				}
 			}
 		})
 
-		console.log(user)
+		console.log(user);
+		
+
+		return {success: true, message: 'Profile updated'}
 	}
 }

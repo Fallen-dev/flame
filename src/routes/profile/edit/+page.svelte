@@ -73,7 +73,7 @@
 					placeholder="Organization title"
 					aria-label="Organization title"
 					autocomplete="organization-title"
-					value={data.user?.meta?.proffesion || ''}
+					value={data.user?.meta?.profession || ''}
 				/>
 			</div>
 		</section>
@@ -82,44 +82,8 @@
 	<Fly stagger="3">
 		<section>
 			<div class="grid">
-				<label for="file"
-					>Upload your image
-					<input type="file" id="file" name="image" />
-				</label>
-				<fieldset>
-					<legend>Gender</legend>
-					<label for="male"
-						><input
-							type="radio"
-							id="male"
-							name="gender"
-							value="male"
-							checked={data.user?.meta?.gender == 'male'}
-						/>Male</label
-					>
-					<label for="female"
-						><input
-							type="radio"
-							id="female"
-							name="gender"
-							value="female"
-							checked={data.user.meta?.gender == 'female'}
-						/>Female</label
-					>
-					<label for="none"
-						><input
-							type="radio"
-							id="none"
-							name="gender"
-							value="none"
-							checked={data.user.meta?.gender == 'none'}
-						/>Not to specify</label
-					>
-				</fieldset>
-			</div>
-			<div class="grid">
-				<button type="submit">Done</button>
-				<button type="reset" class="outline">Discard changes</button>
+				<button type="submit" class="contrast">Done</button>
+				<a href="/profile" role="button" class="contrast outline">Discard changes</a>
 			</div>
 		</section>
 	</Fly>

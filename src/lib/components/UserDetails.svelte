@@ -1,13 +1,12 @@
 <script lang="ts">
 	export let user: any
 
-	const gender = user.gender == 'female' ? 'She/her' : 'He/him'
 	const name = user.firstName + ' ' + user.lastName
 </script>
 
 <hgroup>
 	<h3>{name}</h3>
-	<span>@{user.username} &bullet; {gender}</span>
+	<span>@{user.username} &bullet; {user.gender}</span>
 	<p>{user.company.title}</p>
 </hgroup>
 

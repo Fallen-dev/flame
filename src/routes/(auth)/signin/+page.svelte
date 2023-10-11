@@ -24,6 +24,8 @@
 			invalid: form?.error?.fields?.password
 		}
 	]
+
+	let loading = form?.error && false
 </script>
 
 {#if data.userSession}
@@ -68,7 +70,14 @@
 				<h6>Don&apos;t have an account? <a href="/register">Sign up.</a></h6>
 			</hgroup>
 
-			<button type="submit" class="contrast" slot="actions">Log in</button>
+			<button
+				type="submit"
+				class="contrast"
+				slot="actions"
+				on:click={() => (loading = true)}
+				aria-busy={loading}
+				disabled={loading}>Log in</button
+			>
 		</Form>
 		<!-- FORM -->
 	</Fly>

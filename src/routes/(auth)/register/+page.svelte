@@ -1,5 +1,4 @@
 <script>
-	import { enhance } from '$app/forms'
 	import Fly from '$lib/components/Fly.svelte'
 	import Form from '$lib/components/Form.svelte'
 	import Toast from '$lib/components/Toast.svelte'
@@ -33,6 +32,8 @@
 			invalid: form?.error?.fields?.password
 		}
 	]
+
+	let loading = form?.error && false
 </script>
 
 {#if form?.error}
@@ -56,10 +57,18 @@
 		<Form action="?/signup" {inputs}>
 			<hgroup slot="header">
 				<h1>Sign up</h1>
-				<h6>Already an user? <a href="/signin">Log in</a> instead.</h6>
+				<p>Already an user? <a href="/signin">Log in</a> instead.</p>
+				<h6>You could use any random email</h6>
 			</hgroup>
 
-			<button type="submit" class="contrast" slot="actions">Sign up</button>
+			<button
+				type="submit"
+				class="contrast"
+				slot="actions"
+				on:click={() => (loading = true)}
+				aria-busy={loading}
+				disabled={loading}>Sign up</button
+			>
 		</Form>
 	{/if}
 </Fly>
