@@ -17,7 +17,7 @@
 	}
 
 	let checked = false
-	let duration = 350
+	let duration = 400
 </script>
 
 <footer class="tw-py-2">
@@ -31,7 +31,7 @@
 				>
 					<input type="checkbox" id="checkbox-{id}" class="tw-hidden" aria-hidden bind:checked />
 
-					<div class="tw-h-6 tw-w-6">
+					<div class="tw-h-6 tw-w-6 lg:tw-mt-0.5">
 						{#if checked}
 							<div
 								in:scale={{ delay: duration, duration, start: 1.5, easing: bounce }}

@@ -8,6 +8,7 @@
 	import { page } from '$app/stores'
 
 	export let data
+	let online = true
 </script>
 
 <svelte:head>
@@ -19,6 +20,10 @@
 		rel="stylesheet"
 	/>
 </svelte:head>
+
+<svelte:window bind:online />
+
+<Toaster />
 
 <nav class="container-fluid tw-sticky tw-top-0 tw-z-[1] tw-bg-[var(--background-color)]">
 	<ul>
@@ -39,27 +44,37 @@
 	</ul>
 </nav>
 
-{#if !$page.url.pathname.match(/register|signin|users/i) && !data.userSession}
-	<section class="container md:tw-sticky md:tw-top-20">
-		<hgroup>
-			<h2>Sign up now</h2>
-			<p>Create an account to join the amazing Flame community and explore the world</p>
-		</hgroup>
-
-		<div class="grid">
-			<a href="/register" role="button">Sign up</a>
-			<a href="/signin" role="button" class="contrast outline">Log in</a>
-		</div>
+{#if !online}
+	<section class="container">
+		<article>
+			<hgroup>
+				<h4>No internet connection</h4>
+				<p>Waiting for reconnect...</p>
+				<progress />
+			</hgroup>
+		</article>
 	</section>
-{/if}
-<!-- This p just to give a space -->
-<main class="container">
-	<p aria-hidden />
-	<slot />
-	<p aria-hidden />
-</main>
+{:else}
+	{#if !$page.url.pathname.match(/register|signin|users/i) && !data.userSession}
+		<section class="container md:tw-sticky md:tw-top-20">
+			<hgroup>
+				<h2>Sign up now</h2>
+				<p>Create an account to join the amazing Flame community and explore the world</p>
+			</hgroup>
 
-<Toaster />
+			<div class="grid">
+				<a href="/register" role="button">Sign up</a>
+				<a href="/signin" role="button" class="contrast outline">Log in</a>
+			</div>
+		</section>
+	{/if}
+	<!-- This p just to give a space -->
+	<main class="container">
+		<p aria-hidden />
+		<slot />
+		<p aria-hidden />
+	</main>
+{/if}
 
 <style>
 	.brand:not(.logo) {

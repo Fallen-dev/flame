@@ -3,7 +3,6 @@ import { redirect } from '@sveltejs/kit'
 import { hash } from 'argon2'
 import { auth, createURL, error, validate } from '$lib/utils'
 import { prisma } from '$lib/server/prisma'
-import { nullable } from 'zod'
 
 const randomNumber = String(Math.floor(Math.random() * 1000)).padStart(3, '0')
 

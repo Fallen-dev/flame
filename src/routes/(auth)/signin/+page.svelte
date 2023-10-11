@@ -24,8 +24,6 @@
 			invalid: form?.error?.fields?.password
 		}
 	]
-
-	let loading = form?.error && false
 </script>
 
 {#if data.userSession}
@@ -47,9 +45,9 @@
 		<h1>Welcome back</h1>
 	</Fly>
 
-	{#if form?.error.fields?.email}
-		{#key form.error.fields.email}
-			<Fly y="-100" duration="100">
+	{#key form?.error?.fields?.email}
+		<Fly y="-250" nodelay>
+			{#if form?.error?.fields?.email}
 				<article>
 					<hgroup>
 						<h4>We Could not found any account with this email</h4>
@@ -58,26 +56,17 @@
 
 					<a href="/register" role="button" class="contrast">Sign up</a>
 				</article>
-			</Fly>
-		{/key}
-	{/if}
+			{/if}
+		</Fly>
+	{/key}
 
 	<Fly stagger="1">
 		<!-- FORM -->
-		<Form action="?/signin" {inputs}>
+		<Form action="?/signin" {inputs} btnText="Log in" feedback={form?.error ? true : false}>
 			<hgroup slot="header">
 				<h1>Log in</h1>
 				<h6>Don&apos;t have an account? <a href="/register">Sign up.</a></h6>
 			</hgroup>
-
-			<button
-				type="submit"
-				class="contrast"
-				slot="actions"
-				on:click={() => (loading = true)}
-				aria-busy={loading}
-				disabled={loading}>Log in</button
-			>
 		</Form>
 		<!-- FORM -->
 	</Fly>

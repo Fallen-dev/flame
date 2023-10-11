@@ -1,61 +1,41 @@
-/* Yellow Light scheme (Default) */
+/* Amber Light scheme (Default) */
 /* Can be forced with data-theme="light" */
-[data-theme='light'],
-:root:not([data-theme='dark']) {
-	--primary: #fdd835;
-	--primary-hover: #fbc02d;
-	--primary-focus: rgba(253, 216, 53, 0.125);
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+	--primary: #ffb300;
+	--primary-hover: #ffa000;
+	--primary-focus: rgba(255, 179, 0, 0.125);
 	--primary-inverse: rgba(0, 0, 0, 0.75);
-
-}
-@media only screen and (prefers-color-scheme: light) {
-	#delete {
-		border-color: #ce1d2c;
-		color: #ce1d2c;
-	}
-	#delete-action {
-		border-color: #e63946;
-		background-color: #e63946;
-		color: var(--contrast-inverse);
-	}
 }
 
-/* Yellow Dark scheme (Auto) */
+/* Amber Dark scheme (Auto) */
 /* Automatically enabled if user has Dark mode enabled */
 @media only screen and (prefers-color-scheme: dark) {
 	:root:not([data-theme]) {
-		--primary: #fdd835;
-		--primary-hover: #ffeb3b;
-		--primary-focus: rgba(253, 216, 53, 0.25);
+		--primary: #ffb300;
+		--primary-hover: #ffc107;
+		--primary-focus: rgba(255, 179, 0, 0.25);
 		--primary-inverse: rgba(0, 0, 0, 0.75);
-	}
-
-	#delete {
-		border-color: salmon;
-		color: salmon;
-	}
-	#delete-action {
-		background-color: salmon;
-		color: salmon;
 	}
 }
 
-/* Yellow Dark scheme (Forced) */
+/* Amber Dark scheme (Forced) */
 /* Enabled if forced with data-theme="dark" */
-[data-theme='dark'] {
-	--primary: #fdd835;
-	--primary-hover: #ffeb3b;
-	--primary-focus: rgba(253, 216, 53, 0.25);
+[data-theme="dark"] {
+	--primary: #ffb300;
+	--primary-hover: #ffc107;
+	--primary-focus: rgba(255, 179, 0, 0.25);
 	--primary-inverse: rgba(0, 0, 0, 0.75);
 }
 
-/* Yellow (Common styles) */
+/* Amber (Common styles) */
 :root {
 	--form-element-active-border-color: var(--primary);
 	--form-element-focus-color: var(--primary-focus);
 	--switch-color: var(--primary-inverse);
 	--switch-checked-background-color: var(--primary);
 }
+
 
 /* Custom */
 html {
@@ -70,6 +50,33 @@ h3 {
 	font-display: swap;
 }
 
-.grid > a {
+.grid>a {
 	margin-bottom: 1rem;
+}
+
+code {
+	margin-bottom: var(--spacing);
+}
+
+#delete {
+	border-color: salmon;
+	color: salmon;
+}
+
+#delete-action {
+	background-color: salmon;
+	color: salmon;
+}
+
+@media only screen and (prefers-color-scheme: light) {
+	#delete {
+		border-color: #ce1d2c;
+		color: #ce1d2c;
+	}
+
+	#delete-action {
+		border-color: #e63946;
+		background-color: #e63946;
+		color: var(--contrast-inverse);
+	}
 }

@@ -82,7 +82,7 @@
 	<Fly stagger="3">
 		<section>
 			<div class="grid">
-				<button type="submit" class="contrast">Done</button>
+				<button type="submit" class="contrast" disabled>Work in progress</button>
 				<a href="/profile" role="button" class="contrast outline">Discard changes</a>
 			</div>
 		</section>

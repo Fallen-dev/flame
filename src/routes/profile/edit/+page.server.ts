@@ -1,5 +1,4 @@
-import type { User } from '$types'
-import { redirect, type Actions } from '@sveltejs/kit'
+import type { Actions } from '@sveltejs/kit'
 
 export const actions: Actions = {
 	async default({ request, cookies }) {
@@ -14,28 +13,5 @@ export const actions: Actions = {
 		const cookieUser = cookies.get('user')
 
 		if (!cookieUser) return
-
-		const oldUser = JSON.parse(cookieUser) as User
-
-		const user: User = {
-			name,
-			username,
-			id: oldUser.id,
-			credentials: oldUser.credentials,
-			meta: {
-				phone,
-				profession,
-				domain
-			}
-		}
-
-		cookies.set('user', JSON.stringify(user), {
-			path: '/',
-			httpOnly: true,
-			sameSite: true,
-			maxAge: 60 * 60 * 24 * 24 * 365
-		})
-
-		throw redirect(303, '/profile?success')
 	}
 }

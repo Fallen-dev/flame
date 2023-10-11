@@ -32,8 +32,6 @@
 			invalid: form?.error?.fields?.password
 		}
 	]
-
-	let loading = form?.error && false
 </script>
 
 {#if form?.error}
@@ -54,21 +52,12 @@
 	{:else}
 		<h1>Sign up and join the fantastic community</h1>
 
-		<Form action="?/signup" {inputs}>
+		<Form action="?/signup" {inputs} btnText="sign up" feedback={form?.error ? true : false}>
 			<hgroup slot="header">
 				<h1>Sign up</h1>
 				<p>Already an user? <a href="/signin">Log in</a> instead.</p>
 				<h6>You could use any random email</h6>
 			</hgroup>
-
-			<button
-				type="submit"
-				class="contrast"
-				slot="actions"
-				on:click={() => (loading = true)}
-				aria-busy={loading}
-				disabled={loading}>Sign up</button
-			>
 		</Form>
 	{/if}
 </Fly>

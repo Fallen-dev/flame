@@ -4,12 +4,16 @@
 	export let inputs: Array<FormInputType>
 	export let action: string
 	export let onlyForm = false
+	export let btnText: string
+	export let feedback: boolean
+
+	$: loading = feedback ? false : false
 </script>
 
 {#if onlyForm}
 	<slot name="header" />
 
-	<form method="post" {action} use:enhance>
+	<form method="post" {action} use:enhance on:submit={() => (loading = true)}>
 		{#each inputs as input}
 			<input
 				type={input.type}
@@ -39,14 +43,14 @@
 			</fieldset>
 		</slot>
 		<!---->
-		<slot name="actions" />
+		<button type="submit" aria-busy={loading} disabled={loading}>{btnText}</button>
 	</form>
 {:else}
 	<article class="grid" id="form">
 		<div>
 			<slot name="header" />
 			<!---->
-			<form method="post" {action} use:enhance>
+			<form method="post" {action} use:enhance on:submit={() => (loading = true)}>
 				{#each inputs as input (input.type)}
 					<input
 						type={input.type}
@@ -76,7 +80,7 @@
 					</fieldset>
 				</slot>
 				<!---->
-				<slot name="actions" />
+				<button type="submit" aria-busy={loading} disabled={loading}>{btnText}</button>
 			</form>
 		</div>
 
