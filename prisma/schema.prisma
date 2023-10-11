@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:flame.db"
+}
+
+model User {
+  id       String  @id @unique @default(uuid())
+  email    String  @unique
+  username String  @unique
+  password String
+  name     String
+  signedIn Boolean @default(true)
+  meta     Meta?   @relation(fields: [metaID], references: [id])
+  metaID   Int    @unique
+}
+
+model Meta {
+  id         Int     @id @default(autoincrement())
+  domain     String?
+  profession String?
+  gender     String?
+  image      String?
+  phone      String?
+  user       User?
+}

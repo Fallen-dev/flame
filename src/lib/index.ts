@@ -1,0 +1,10 @@
+// place files you want to import through the `$lib` alias in this folder.
+import './types'
+import './components/Fly.svelte'
+import './components/Card.svelte'
+import './components/HashTags.svelte'
+import './components/FooterBtns.svelte'
+import './components/Header.svelte'
+import './components/Toast.svelte'
+import './components/Form.svelte'
+import './url'
