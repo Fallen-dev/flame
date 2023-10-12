@@ -31,7 +31,7 @@
 			</article>
 		{/each}
 		<!---->
-		{#if !data.userSession}
+		{#if !data.sessionID}
 			<article>
 				<h4>That&apos;s it&excl; Create an account for more</h4>
 				<p>

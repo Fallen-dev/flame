@@ -1,12 +1,17 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
+	import { page } from '$app/stores'
 	import Fly from '$lib/components/Fly.svelte'
 	import Toast from '$lib/components/Toast.svelte'
+	import { quintOut } from 'svelte/easing'
+	import { tweened } from 'svelte/motion'
+	import { fly } from 'svelte/transition'
 
 	export let form
 	export let data
 
-	$: loading = (form?.success || form?.error) && false
+	let loading = false
+	let open = false
 
 	let inputData = {
 		profession: '',
@@ -14,14 +19,40 @@
 		phone: '',
 		gender: ''
 	}
+
+	let profileCompletion = () => {
+		if (!data.user) return 0
+		if (!data.user.meta) return 0
+
+		const total = Object.entries(data.user.meta).slice(1)
+
+		const completed = total.filter(([_, value]) => value).length
+
+		if (!completed) return 0
+
+		return completed
+	}
+
+	const progress = tweened(profileCompletion(), {
+		duration: 1200,
+		easing: quintOut
+	})
 </script>
 
-{#if form?.success}
-	<Toast type="success" message={form.message} />
+{#if form?.success || form?.error}
+	<Toast
+		type={form.error ? 'error' : 'success'}
+		message={form?.message || form.error?.message || ''}
+	/>
+{:else if $page.url.searchParams.has('m' && 't')}
+	<Toast
+		type={$page.url.searchParams.get('t') || 'blank'}
+		message={$page.url.searchParams.get('m') || ''}
+	/>
 {/if}
 
 <Fly>
-	{#if data.user && data.userSession}
+	{#if data.user && data.sessionID}
 		<section>
 			<figure class="tw-w-64 tw-h-64 tw-mx-auto tw-overflow-hidden">
 				<img
@@ -35,9 +66,9 @@
 				<h3 class="tw-capitalize">{data.user.name}</h3>
 				<span>
 					@{data.user.username}
-					{#if data.user.meta?.gender}
+					{#if data.user.meta?.gender?.match(/male|female/)}
 						&bullet; {data.user.meta.gender}
-					{:else if inputData.gender}
+					{:else if inputData.gender?.match(/male|female/)}
 						&bullet; {inputData.gender}
 					{/if}
 				</span>
@@ -71,24 +102,32 @@
 		</section>
 
 		<!-- Complete profile -->
-		{#if !data.user.meta?.domain || !data.user.meta?.gender || !data.user.meta?.phone || !data.user.meta?.profession}
-			<article>
+		{#if $progress < 4}
+			<article out:fly={{ y: -350, duration: 350, opacity: 1 }}>
 				<hgroup>
 					<h4>Complete your profile</h4>
-					<h6>Strongly recommended</h6>
+					<h6>A complete profile will help you to get more views</h6>
 				</hgroup>
 
-				<!-- <p>A complete profile will help you to shine even more</p> -->
-
-				<details class="tw-mb-0">
+				<details class="tw-mb-0" bind:open>
 					<!-- svelte-ignore a11y-no-redundant-roles -->
-					<summary role="button" class="contrast outline">Let&apos;s do it</summary>
+					<summary role="button" class="contrast outline"
+						>{open ? `Completion step ${Math.floor($progress)} / 4` : "Let's do it"}</summary
+					>
+					<progress max="4" value={$progress} />
 
 					<form
 						method="post"
 						action="?/updateProfile"
-						use:enhance
-						on:submit={() => (loading = true)}
+						use:enhance={() => {
+							loading = true
+							return async function ({ update, result }) {
+								if (result.type === 'failure') await update({ reset: false })
+								else await update()
+								progress.set(profileCompletion())
+								loading = false
+							}
+						}}
 					>
 						<div class="grid">
 							{#if !data.user.meta?.domain}
@@ -98,8 +137,12 @@
 									placeholder="Website or portfolio url"
 									aria-label="Website or portfolio url"
 									autocomplete="url"
+									aria-invalid={form?.error?.fields?.domain && true}
 									bind:value={inputData.domain}
 								/>
+								{#if form?.error?.fields?.domain}
+									<small>{form?.error?.fields?.domain}</small>
+								{/if}
 							{/if}
 							{#if !data.user.meta?.profession}
 								<input
@@ -120,9 +163,14 @@
 										placeholder="Phone no"
 										aria-label="Phone no"
 										autocomplete="tel"
+										aria-invalid={form?.error?.fields?.phone && true}
 										bind:value={inputData.phone}
 									/>
-									<small>You could use any random number</small>
+									{#if form?.error?.fields?.phone}
+										<small>{form?.error?.fields?.phone}</small>
+									{:else}
+										<small>You could use any random number</small>
+									{/if}
 								</div>
 							{/if}
 						</div>

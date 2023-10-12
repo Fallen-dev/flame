@@ -64,8 +64,9 @@ code {
 }
 
 #delete-action {
+	border-color: salmon;
 	background-color: salmon;
-	color: salmon;
+	color: var(--color);
 }
 
 @media only screen and (prefers-color-scheme: light) {

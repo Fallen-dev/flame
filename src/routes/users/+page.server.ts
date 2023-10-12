@@ -3,7 +3,7 @@ import type { PageServerLoad } from './$types'
 import { createURL } from '$lib/utils'
 
 export const load: PageServerLoad = function ({ locals }) {
-	if (!locals.userSession)
+	if (!locals.sessionID)
 		throw redirect(
 			307,
 			createURL('/', {

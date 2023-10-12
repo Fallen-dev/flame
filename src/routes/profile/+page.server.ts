@@ -1,22 +1,22 @@
 import { prisma } from '$lib/server/prisma'
-import { error } from '$lib/utils'
+import { error, validate } from '$lib/utils'
 import type { Actions } from './$types'
 
 export const actions: Actions = {
 	async signout({ cookies, locals }) {
-		
+
 		if (!locals.user)
 			return error({
 				message: "You aren't signed in"
 			})
 
-		cookies.delete('user session')
-		
+		cookies.delete('sessionID')
+
 		await prisma.user.update({
 			where: { id: locals.user.id },
 			data: { signedIn: false }
 		})
-		locals.userSession = null
+		locals.sessionID = undefined
 
 		return {
 			success: true,
@@ -25,19 +25,19 @@ export const actions: Actions = {
 	},
 
 	async deletion({ cookies, locals }) {
-		
+
 		if (!locals.user)
 			return error({
 				message: "You aren't signed in"
 			})
 
-		cookies.delete('user session')
+		cookies.delete('sessionID')
 
 		const user = prisma.user.delete({
-			where: { id: locals.user.id },
+			where: { id: locals.user.id }
 		})
 		const userMeta = prisma.meta.delete({
-			where: {id: String(locals.user.metaID)}
+			where: { id: locals.user.metaID || undefined }
 			//* IDK why it showing metaID is number type where
 			//* I have declared that as String in the schema
 		})
@@ -45,7 +45,7 @@ export const actions: Actions = {
 		await prisma.$transaction([user, userMeta])
 
 		locals.user = null
-		locals.userSession = null
+		locals.sessionID = undefined
 
 		return {
 			success: true,
@@ -53,20 +53,30 @@ export const actions: Actions = {
 		}
 	},
 
-	async updateProfile({ locals, request }) {
-		console.log('hello');
-		
+	async updateProfile({ locals, request, cookies }) {
+
 		const formData = await request.formData()
 
-		const phone = formData.get('phone') as string
-		const domain = formData.get('domain') as string
-		const profession = formData.get('profession') as string
-		const gender = formData.get('gender') as string
+		const phone = formData.get('phone') as string || undefined
+		const domain = formData.get('domain') as string || undefined
+		const profession = formData.get('profession') as string || undefined
+		const gender = formData.get('gender') as string || undefined
 
-		if (!locals.user)
+		if (!cookies.get('sessionID') || !locals.user)
 			return error({
 				message: "You aren't signed in"
 			})
+
+		const isEmpty = [phone, domain, profession, gender].filter(i => typeof i !== 'undefined').length == 0
+
+		if (isEmpty) return error({ message: 'Nothing to update' })
+
+		const result = validate({
+			domain,
+			phone,
+		})
+
+		if (result.error) return error({ message: 'Input validation error', fields: result.error })
 
 		const meta = {
 			phone: phone || locals.user.meta?.phone,
@@ -75,9 +85,7 @@ export const actions: Actions = {
 			gender: gender || locals.user.meta?.gender
 		}
 
-		console.log(meta);
-
-		const user = await prisma.user.update({
+		await prisma.user.update({
 			where: { id: locals.user.id },
 			data: {
 				meta: {
@@ -86,9 +94,6 @@ export const actions: Actions = {
 			}
 		})
 
-		console.log(user);
-		
-
-		return {success: true, message: 'Profile updated'}
+		return { success: true, message: 'Profile updated' }
 	}
 }

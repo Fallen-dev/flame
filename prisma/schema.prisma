@@ -26,7 +26,6 @@ model Meta {
   domain     String?
   profession String?
   gender     String?
-  image      String?
   phone      String?
   user       User?
 }

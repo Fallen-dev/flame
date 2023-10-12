@@ -3,7 +3,7 @@ import { fail } from '@sveltejs/kit'
 import type { PageLoad } from './$types'
 
 export const load: PageLoad = async ({ fetch, data }) => {
-	const session = data.userSession
+	const session = data.sessionID
 
 	async function getposts() {
 		const res = await fetch(url + `/posts?limit=${session ? 30 : 3}`)

@@ -26,7 +26,7 @@
 	]
 </script>
 
-{#if data.userSession}
+{#if data.sessionID}
 	<hgroup>
 		<h2>You&apos;re already signed in</h2>
 		<h3>Are you lost?</h3>
@@ -62,7 +62,7 @@
 
 	<Fly stagger="1">
 		<!-- FORM -->
-		<Form action="?/signin" {inputs} btnText="Log in" feedback={form?.error ? true : false}>
+		<Form action="?/signin" {inputs} btnText="Log in">
 			<hgroup slot="header">
 				<h1>Log in</h1>
 				<h6>Don&apos;t have an account? <a href="/register">Sign up.</a></h6>

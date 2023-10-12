@@ -2,25 +2,28 @@ import { prisma } from '$lib/server/prisma'
 import type { Handle } from '@sveltejs/kit'
 
 export const handle: Handle = async function ({ event, resolve }) {
-	const sessionID = event.cookies.get('user session')
 
-	if (sessionID) {
-		event.locals.userSession = sessionID
+	const sessionID = () => event.cookies.get('sessionID')
+
+	if (sessionID()) {
+		event.locals.sessionID = sessionID()
 
 		const user = await prisma.user.findUnique({
-			where: { id: sessionID },
+			where: { id: event.locals.sessionID },
 			include: { meta: true }
 		})
 
-		if (!user) {
-			event.locals.userSession = null
+		if (user) event.locals.user = user
+		else {
+			event.locals.user = null
+			event.locals.sessionID = undefined
 		}
-		event.locals.user = user
-	} //
+	}//
 	else {
-		event.locals.userSession = null
+		event.locals.sessionID = undefined
 		event.locals.user = null
 	}
 
-	return await resolve(event)
+	sessionID()
+	return resolve(event)
 }

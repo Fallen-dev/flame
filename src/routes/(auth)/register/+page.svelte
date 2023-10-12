@@ -39,7 +39,7 @@
 {/if}
 
 <Fly>
-	{#if data.userSession}
+	{#if data.sessionID}
 		<hgroup>
 			<h2>You&apos;re already registered</h2>
 			<h3>Are you lost?</h3>
@@ -52,7 +52,7 @@
 	{:else}
 		<h1>Sign up and join the fantastic community</h1>
 
-		<Form action="?/signup" {inputs} btnText="sign up" feedback={form?.error ? true : false}>
+		<Form action="?/signup" {inputs} btnText="sign up">
 			<hgroup slot="header">
 				<h1>Sign up</h1>
 				<p>Already an user? <a href="/signin">Log in</a> instead.</p>

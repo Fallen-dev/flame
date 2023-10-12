@@ -8,32 +8,30 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			user: User
-			userSession: string | null
+			sessionID: string | undefined
 		}
 		// interface PageData {}
 		// interface Platform {}
 	}
 
 	type User =
-		| ({
-				meta: {
-					id: number
-					domain: string | null
-					profession: string | null
-					gender: string | null
-					image: string | null
-					phone: string | null
-				} | null
-		  } & {
-				id: string
-				email: string
-				username: string
-				password: string
-				name: string
-				signedIn: boolean
-				metaID: number | null
-		  })
-		| null
+		{
+			meta: {
+				id: string;
+				domain: string | null;
+				profession: string | null;
+				gender: string | null;
+				phone: string | null;
+			} | null;
+		} & {
+			id: string;
+			email: string;
+			username: string;
+			password: string;
+			name: string;
+			signedIn: boolean;
+			metaID: string | null;
+		} | null
 
 	interface FormInputType {
 		type: string
@@ -45,4 +43,4 @@ declare global {
 	}
 }
 
-export {}
+export { }

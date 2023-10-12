@@ -3,8 +3,7 @@ import { redirect } from '@sveltejs/kit'
 import { hash } from 'argon2'
 import { auth, createURL, error, validate } from '$lib/utils'
 import { prisma } from '$lib/server/prisma'
-
-const randomNumber = String(Math.floor(Math.random() * 1000)).padStart(3, '0')
+import { generateUsername } from 'unique-username-generator'
 
 export const actions: Actions = {
 	async signup({ request, cookies }) {
@@ -15,14 +14,14 @@ export const actions: Actions = {
 		const password = formData.get('password') as string
 		const remember = formData.get('remember') === 'on' ? true : false
 
-		const username = name.split(' ')[0].toLowerCase() + randomNumber
+		const username = generateUsername(undefined, 3, 17)
 
-		const validation = validate({ name, email, password })
+		const result = validate({ name, email, password })
 
-		if (!validation.success)
+		if (result?.error)
 			return error({
 				message: 'Input validation error',
-				fields: validation.errors
+				fields: result.error
 			})
 
 		const isExistingUser = await prisma.user.findUnique({ where: { email } })
